@@ -33,16 +33,25 @@ void show_board() {
 	cout << "---------------------------" << endl;
 	cout << "  12345678" << endl;
 	char t='a';
+	int bcount = 0, wcount = 0;
 	rep(i, BOARD_SIZE) {
 		cout << char(t + i)<<" ";
 		rep(j, BOARD_SIZE) {
 			int t = board[i][j];
 			if (t == 0)cout << "-";
-			else if (t == 1)cout << "●";
-			else if (t == -1)cout << "○";
+			else if (t == 1) {
+				cout << "●";
+				wcount++;
+			}
+			else if (t == -1) {
+				cout << "○";
+				bcount++;
+			}
 		}
 		cout << endl;
 	}
+	cout << "先手(●):" << wcount << endl;
+	cout << "後手(○):" << bcount << endl;
 }
 
 //手番表示
@@ -67,11 +76,9 @@ void input_check(char* x, char* y) {
 
 bool inside_board(int i, int j) {
 	if (i < 0 || i >= BOARD_SIZE) {
-		cout << "outside" << endl;
 		return false;
 	}
 	else if (j < 0 || j >= BOARD_SIZE) {
-		cout << "outside" << endl;
 		return false;
 	}
 	return true;
@@ -111,9 +118,9 @@ bool check_plc(int i, int j) {
 
 			int next_i = i + d_i * times;
 			int next_j = j + d_j * times;
-			cout << "debug check: i=" <<next_i<<" j:"<<next_j<< endl;
+			//cout << "debug check: i=" <<next_i<<" j:"<<next_j<< endl;
 			//注目するマスが有効範囲内か
-			if (!inside_board(next_i, next_j))break;
+			if (!inside_board(next_i, next_j))continue;
 			//cout << "debug check" << endl;
 			//自分の駒で挟めていたら
 			if (board[next_i][next_j] == player && times>1) {
@@ -151,7 +158,7 @@ void place_stn(int i, int j) {
 			int next_i = i + d_i * times;
 			int next_j = j + d_j * times;
 			//注目するマスが有効範囲内か
-			if (!inside_board(next_i, next_j))break;
+			if (!inside_board(next_i, next_j))continue;
 			//自分の駒で挟めていたら
 			if (board[next_i][next_j] == player && times > 1) {
 				rep(k, times) {
@@ -228,7 +235,6 @@ int main() {
 		} while (!check_plc(x, y));
 		//cout << x << "行" << y << "列目" << endl
 		//cout << "player:" << player << endl;
-		cout << "place" << endl;
 		place_stn(x, y);
 		player *= -1;
 		cout << "turn:" << ++turn << endl;
