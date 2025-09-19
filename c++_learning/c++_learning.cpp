@@ -38,7 +38,9 @@ void make_board() {
 //盤面表示
 void show_board() {
 	cout << "---------------------------" << endl;
-	cout << "  12345678" << endl;
+	cout << "  12345678 " ;
+	rep(j, 8) printf("%2d", j+1);
+	cout << endl;
 	char t='a';
 	int bcount = 0, wcount = 0;
 	rep(i, BOARD_SIZE) {
@@ -54,6 +56,10 @@ void show_board() {
 				cout << "○";
 				bcount++;
 			}
+		}
+		cout << " ";
+		rep(j, BOARD_SIZE) {
+			printf("%2d",val[i][j]);
 		}
 		cout << endl;
 	}
@@ -248,9 +254,35 @@ void AIturn() {
 		rep(j, BOARD_SIZE) {
 			if (check_plc(i, j)) {
 				int a = place_stn(i, j, true);
+				val[i][j] = a;
 				if (a > count) {
 					count = a;
 					point = { i,j };
+				}
+				//辺の上だったら
+				if (i == 0 || i == BOARD_SIZE-1) {
+					//四隅だったら
+					if (j == 0 || j == BOARD_SIZE-1) {
+						val[i][j] = 99;
+					}
+					//すぐに取られるならやめておく
+					else if (board[i][j + 1] == 1) {
+						val[i][j] = -1;
+					}
+					else if (board[i][j - 1] == 1) {
+						val[i][j] = -1;
+					}
+					else val[i][j] = 9;
+				}
+				else if (j == 0 || j == BOARD_SIZE-1) {
+					//すぐに取られるならやめておく
+					if (board[i + 1][j] == 1) {
+						val[i][j] = -1;
+					}
+					else if (board[i - 1][j] == 1) {
+						val[i][j] = -1;
+					}
+					else val[i][j] = 9;
 				}
 			}
 		}
