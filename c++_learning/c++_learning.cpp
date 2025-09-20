@@ -197,11 +197,12 @@ int place_stn(int i, int j, bool simu) {
 					
 					count++;
 				}
+				count--;
 			}
 		}
 	}
 	if (simu == false) board[i][j] = player;
-	return ++count;
+	return count;
 }
 
 bool flag_fin() {
@@ -250,14 +251,16 @@ void judge() {
 void AIturn() {
 	int count = 0;
 	pair<int, int> point;
+	int max_val = 0;
 	rep(i, BOARD_SIZE) {
 		rep(j, BOARD_SIZE) {
+			val[i][j] = 0;
 			if (check_plc(i, j)) {
 				int a = place_stn(i, j, true);
 				val[i][j] = a;
 				if (a > count) {
 					count = a;
-					point = { i,j };
+					//point = { i,j };
 				}
 				//辺の上だったら
 				if (i == 0 || i == BOARD_SIZE-1) {
@@ -283,6 +286,10 @@ void AIturn() {
 						val[i][j] = -1;
 					}
 					else val[i][j] = 9;
+				}
+				if (val[i][j] > max_val) {
+					max_val = val[i][j];
+					point = { i,j };
 				}
 			}
 		}
